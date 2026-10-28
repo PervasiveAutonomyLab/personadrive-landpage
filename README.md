@@ -21,9 +21,6 @@ then open http://localhost:8000.
 All the text, tables and links are in `index.html`. Edit, commit and push; Pages picks up the new version
 within a minute or two.
 
-The Code and Dataset buttons are greyed out for now. When those are public, drop the `is-disabled` class and add
-an `href`.
-
 Videos and figures live in `static/`. Every clip is there as WebM and MP4, plus a `.jpg` poster. We generate them
 from our demo-video renders with `make_assets.py`, which needs our `video_generation` folder next to this repo, so
 it won't run from a fresh clone.
