@@ -288,13 +288,13 @@
       </div>
       <div class="column">
         <h4 class="title is-5"><span class="stage">2</span> Retrieval head</h4>
-        <p>Frozen SigLIP features (768-d) are concatenated with a trained ControlEncoder over speed, throttle, steering and
-          command (128-d) and projected to a 1024-d embedding. A weighted triplet loss trains it, with extra weight on
+        <p>Frozen SigLIP features (768-d) are concatenated with a trained ControlEncoder over speed, throttle, steering,
+          brake and command (128-d) and projected to a 1024-d embedding. A weighted triplet loss trains it, with extra weight on
           hard negatives. One head serves all styles; only the queried index changes.</p>
       </div>
       <div class="column">
         <h4 class="title is-5"><span class="stage">3</span> In-context SFT</h4>
-        <p>The VLA backbone (InternVL2-1B, inherited from SimLingo) is fine-tuned with a rank-16 LoRA to read the K = 2
+        <p>The VLA backbone (InternVL2-1B, inherited from SimLingo) is fine-tuned with a rank-32 LoRA to read the K = 2
           retrieved context points as few-shot examples. It receives no style label and has to infer the style from the
           demonstrations it is given.</p>
       </div>
