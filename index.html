@@ -275,7 +275,8 @@
       <figcaption>Offline, the frames of each style are stored in their own FAISS index. Online, the retrieval head
         encodes the current scene, queries the index of the selected style, and returns the K most similar context
         points. They are placed before the current observation in the prompt of the VLA backbone, whose waypoints the
-        Route MLP decodes and a PID controller turns into steering, throttle and brake.</figcaption>
+        Route MLP decodes. Two PID controllers then turn the geometric waypoints into steering and the temporal
+        waypoints into throttle and brake.</figcaption>
     </figure>
 
     <div class="columns stages">
@@ -294,8 +295,10 @@
       </div>
       <div class="column">
         <h4 class="title is-5"><span class="stage">3</span> In-context SFT</h4>
-        <p>The VLA backbone (InternVL2-1B, inherited from SimLingo) is fine-tuned with a rank-32 LoRA to read the K = 2
-          retrieved context points as few-shot examples. It receives no style label and has to infer the style from the
+        <p>The VLA backbone (InternVL2-1B, inherited from SimLingo) is fine-tuned to read the K = 2
+          retrieved context points as few-shot examples. Training updates a rank-32 LoRA on the language model, the
+          vision-to-language projector, the driving adaptor and the waypoint encoder, while the vision encoder and the
+          retrieval head stay frozen. The model receives no style label and has to infer the style from the
           demonstrations it is given.</p>
       </div>
     </div>
