@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="H94OEA1dDngGpa_hpkiC9sqMeTe-Pmt7YJoAIQyXToQ">
-  <meta name="description" content="PersonaDrive (WACV 2027, UC Irvine) conditions a vision-language-action driving agent on retrieved human demonstrations from a style-instructed dataset for closed-loop CARLA simulation. Switching style is a single database swap.">
+  <meta name="description" content="PersonaDrive (WACV 2027, UC Irvine) conditions a vision-language-action driving agent on retrieved human demonstrations from a style-instructed dataset for closed-loop CARLA simulation. Switching style only means searching a different index, with no retraining.">
   <meta name="keywords" content="PersonaDrive, autonomous driving, vision-language-action, retrieval-augmented generation, driving style, CARLA, Bench2Drive">
   <title>PersonaDrive: Human-Style Retrieval-Augmented VLA Agents for Closed-Loop Driving Simulation</title>
   <link rel="canonical" href="https://pervasiveautonomylab.github.io/personadrive-landpage/">
@@ -13,13 +13,13 @@
   <meta property="og:site_name" content="PersonaDrive">
   <meta property="og:url" content="https://pervasiveautonomylab.github.io/personadrive-landpage/">
   <meta property="og:title" content="PersonaDrive: Human-Style Retrieval-Augmented VLA Agents for Closed-Loop Driving Simulation">
-  <meta property="og:description" content="A VLA driving agent conditioned on retrieved human demonstrations. Switching driving style is a single database swap.">
+  <meta property="og:description" content="A VLA driving agent that takes its driving style from retrieved human demonstrations. Switching style only means searching a different index, with no retraining.">
   <meta property="og:image" content="https://pervasiveautonomylab.github.io/personadrive-landpage/static/videos/teaser.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PersonaDrive: Human-Style Retrieval-Augmented VLA Agents for Closed-Loop Driving Simulation">
-  <meta name="twitter:description" content="A VLA driving agent conditioned on retrieved human demonstrations. Switching driving style is a single database swap.">
+  <meta name="twitter:description" content="A VLA driving agent that takes its driving style from retrieved human demonstrations. Switching style only means searching a different index, with no retraining.">
   <meta name="twitter:image" content="https://pervasiveautonomylab.github.io/personadrive-landpage/static/videos/teaser.jpg">
 
   <script type="application/ld+json">
@@ -147,26 +147,26 @@
     <h2 class="title is-3 has-text-centered">Abstract</h2>
     <div class="content has-text-justified">
       <p>
-        Closed-loop driving simulators populate their environments with non-ego traffic agents that behave much the same
-        way, whether from rule-based traffic managers or from learned models trained toward a single behavioral mode.
-        Recent work introduces style variation through post-hoc labels or LLM-inferred reward weights, but these act as
-        proxies for what a style should reward rather than demonstrations of humans explicitly asked to drive in that style.
+        Closed-loop driving simulators mostly fill their environments with traffic agents that behave alike, whether
+        they are rule-based or learned. Recent methods that control driving style learn it from labels added to recorded
+        driving afterwards, from synthetic data generated to reflect each style, or from reward weights estimated by a
+        large language model (LLM). All of these are indirect estimates of a style, not recordings of people who were
+        instructed to drive in it.
       </p>
       <p>
-        We introduce PersonaDrive, a pipeline that conditions a vision-language-action (VLA) driving agent on retrieved
-        demonstrations from a style-instructed dataset in which 15 participants drive CARLA Leaderboard routes under
-        aggressive, neutral, and conservative instructions on a driver-in-the-loop rig. The pipeline mines behavioral
-        triplets offline with a combined image-text similarity score, trains a lightweight retrieval head fusing frozen
-        visual features with a small control encoder over per-style databases, and fine-tunes one VLA backbone to read
-        retrieved context points as in-context demonstrations. Switching style at inference is a single database swap, so
-        one set of weights serves every style with no per-style retraining.
+        We introduce PersonaDrive, a vision-language-action (VLA) driving agent that takes its style from retrieved
+        human demonstrations. The demonstrations come from a new dataset in which 15 participants drove CARLA routes on a
+        driving simulator under conservative, neutral, and aggressive instructions. PersonaDrive trains a lightweight
+        retrieval head on features from a frozen image encoder and on control signals over per-style databases, and
+        fine-tunes one VLA backbone over the retrieved demonstrations. Switching style only means searching a different
+        FAISS index, with no retraining.
       </p>
       <p>
-        On Bench2Drive, PersonaDrive (no style) improves the driving score by 4.6% over SimLingo and 2.5% over HiP-AD.
-        Under style conditioning it attains the highest driving score in every style within a 2.1-point band
-        (87.55–89.62), its weakest style surpassing the strongest baseline (DMW) by 5.8%, while average speed and
-        acceleration rise by 19.8% and 24.9% from the conservative to the aggressive instruction. Each agent is evaluated
-        individually as a driving policy.
+        On the Bench2Drive benchmark without style conditioning, PersonaDrive improves the Driving Score by 4.6% over
+        SimLingo and by 2.5% over HiP-AD, a gain that fine-tuning without retrieval does not reproduce. With style
+        conditioning, PersonaDrive outperforms the strongest baseline, Drive My Way, in every style, with a Driving Score
+        6.7% to 11.6% higher. Its driving also follows the instruction, since average speed rises by 19.8% from the
+        conservative to the aggressive style. Each traffic agent is evaluated individually as a driving policy.
       </p>
     </div>
   </div>
@@ -181,10 +181,10 @@
         Rule-based traffic managers and learned traffic models produce agents that behave alike. Real traffic spans
         conservative, neutral and aggressive drivers, and those differences matter most at merges, unprotected turns and
         in dense urban traffic, where the ego policy has to react to the people around it.</p>
-      <p><b>Why not style labels or reward weights?</b><br>
-        Existing personalization methods supervise style with post-hoc observational labels or with reward weights
-        inferred by an LLM. Both approximate what a style should reward. Neither records what people actually do when
-        they are asked to drive in that style.</p>
+      <p><b>Why not style labels, synthetic data or reward weights?</b><br>
+        Existing methods learn style from labels added to recorded driving afterwards, from synthetic data generated
+        for each style, or from reward weights inferred by an LLM. All of these are indirect estimates of a style.
+        None records what people actually do when they are asked to drive in it.</p>
       <p><b>What does PersonaDrive do instead?</b><br>
         We recorded people driving under explicit style instructions and store their frames in one database per style. At
         every tick, a retrieval head finds the most similar context points in the selected database, and the VLA backbone
@@ -194,19 +194,20 @@
     <h3 class="title is-4">Contributions</h3>
     <div class="content">
       <ol>
-        <li><b>A controlled style driving dataset.</b> 15 drivers drive CARLA Leaderboard routes under aggressive, neutral
-          and conservative instructions on a driver-in-the-loop rig. The design is paired at the route level, which
-          decouples style from driver identity (29,777 frames, 55 routes, 21 scenario types).</li>
-        <li><b>A style-conditioned triplet-RAG architecture.</b> We mine behavioral triplets (Stage 1), train a retrieval
-          head over per-style databases (Stage 2), and fine-tune the VLA backbone to read retrieved context points as
-          in-context demonstrations (Stage 3). Style control comes from retrieved human demonstrations, not from style
-          tokens, proxy rewards or per-style fine-tuning.</li>
+        <li><b>A controlled driving-style dataset.</b> 15 drivers drove CARLA Leaderboard scenarios in a
+          driver-in-the-loop setup, each of their routes three times: once conservatively, once neutrally and once
+          aggressively. Across these three drives, the driver and the route stay the same, and only the style the driver
+          was asked to follow changes (29,777 frames, 55 routes, 21 scenario types).</li>
+        <li><b>A retrieval-based architecture for driving style.</b> The style comes from retrieved human
+          demonstrations. The retrieval head is trained on triplets built from the human data: a positive has a similar
+          scene driven the same way, a hard negative has a similar scene driven differently (another speed or command),
+          and an easy negative differs in both scene and action. The VLA backbone then conditions its waypoints on the
+          retrieved demonstrations, so switching style only means searching a different FAISS index.</li>
         <li><b>Closed-loop results on Bench2Drive.</b> Without style, PersonaDrive improves the Driving Score by 4.6% over
-          SimLingo (88.95 vs. 85.07) and 2.5% over HiP-AD (86.77). With style conditioning it has the highest Driving
-          Score in every style, its weakest style still 5.8% above the strongest baseline (DMW), while speed and
-          acceleration rise 19.8% and 24.9% from the conservative to the aggressive instruction with no per-style
-          retraining. A retrieval-depth ablation shows open-loop and closed-loop accuracy moving together with the number
-          of retrieved demonstrations on a fixed checkpoint.</li>
+          SimLingo (88.95 vs. 85.07) and by 2.5% over HiP-AD (86.77), and fine-tuning without retrieval does not
+          reproduce this gain. With style, its Driving Score is 6.7% to 11.6% higher than that of the strongest baseline,
+          Drive My Way, in every style, while average speed rises by 19.8% from the conservative to the aggressive
+          style.</li>
       </ol>
     </div>
   </div>
@@ -231,7 +232,7 @@
         <p>Data comes from 15 non-professional drivers with valid licenses on a driver-in-the-loop rig: a Next Level
           Racing GTrack seat, three 50-inch monitors covering about 130° and a Logitech G923 wheel and pedals. CARLA runs
           in synchronous mode at 20 Hz. The ego vehicle is the only human-controlled actor and TrafficManager drives the
-          rest of the traffic. Each participant drives the routes in randomized order, once under each instruction.</p>
+          rest of the traffic. Each participant drives each of their routes three times, in random order, once under each instruction.</p>
       </div>
     </div>
 
