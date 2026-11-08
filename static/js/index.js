@@ -10,6 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('video[autoplay]').forEach((v) => observer.observe(v));
   }
 
+  // visitor map: inject the widget script once the page has loaded, so it never delays the page
+  const mapBox = document.querySelector('.visitors-map[data-src]');
+  if (mapBox) {
+    const loadMap = () => {
+      const s = document.createElement('script');
+      s.id = 'mapmyvisitors';
+      s.src = mapBox.dataset.src;
+      s.async = true;
+      mapBox.appendChild(s);
+    };
+    if (document.readyState === 'complete') loadMap();
+    else window.addEventListener('load', loadMap, { once: true });
+  }
+
   document.querySelectorAll('.copy-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const code = document.getElementById(btn.dataset.target);
