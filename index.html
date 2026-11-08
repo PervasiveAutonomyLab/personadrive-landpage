@@ -227,9 +227,9 @@
         <img class="rounded" src="static/images/hardware_rig.jpg" alt="Driver-in-the-loop hardware rig">
       </div>
       <div class="column content">
-        <p>Data comes from 15 non-professional drivers with valid licenses on a driver-in-the-loop rig: a Next Level
+        <p>Data comes from 15 non-professional drivers with valid licenses on a driver-in-the-loop rig with a Next Level
           Racing GTrack seat, three 50-inch monitors covering about 130° and a Logitech G923 wheel and pedals. CARLA runs
-          in synchronous mode at 20 Hz. The ego vehicle is the only human-controlled actor and TrafficManager drives the
+          in synchronous mode at 20 Hz, and every fifth step is recorded, so the frames are 0.25 s apart (4 Hz). The ego vehicle is the only human-controlled actor and TrafficManager drives the
           rest of the traffic. Each participant drives each of their routes three times, in random order, once under each instruction.</p>
       </div>
     </div>
@@ -459,11 +459,11 @@
           <tr><td>DS ↑</td><td>85.07</td><td>81.55</td><td class="ours-cell">88.95</td><td>89.16</td><td>89.30</td></tr>
           <tr><td>SR (%) ↑</td><td>67.27</td><td>62.17</td><td class="ours-cell">72.29</td><td>72.35</td><td>73.10</td></tr>
           <tr><td>Tokens ↓</td><td>547</td><td>1292</td><td class="ours-cell">2030</td><td>2769</td><td>3507</td></tr>
-          <tr><td>Latency (ms) ↓</td><td>480.3</td><td>509.6</td><td class="ours-cell">557.7</td><td>599.4</td><td>649.7</td></tr>
+          <tr><td>Total time per step (ms) ↓</td><td>480.3</td><td>509.6</td><td class="ours-cell">557.7</td><td>599.4</td><td>649.7</td></tr>
         </tbody>
       </table>
-      <p class="table-note">K = 0 is the SimLingo backbone with retrieval disabled; K ≥ 1 use the same PersonaDrive
-        checkpoint. We operate at K = 2, which adds 77.4 ms per tick over SimLingo.</p>
+      <p class="table-note">K = 0 is the SimLingo backbone with retrieval disabled, and K ≥ 1 uses the same PersonaDrive
+        checkpoint. We operate at K = 2, which adds 77.4 ms per step over SimLingo.</p>
     </div>
 
     <h3 class="title is-5">Bench2Drive leaderboard, LLM/VLA methods</h3>
