@@ -99,7 +99,7 @@
       <h2 class="subtitle has-text-centered teaser-caption">
         <span class="dnerf">PersonaDrive</span> conditions a vision-language-action (VLA) driving agent on demonstrations
         retrieved from people who were asked to drive in a given style. Changing the style changes which database is
-        searched; one set of weights serves every style.
+        searched, and one set of weights serves every style.
       </h2>
     </div>
   </div>
@@ -127,7 +127,7 @@
         <source src="static/videos/style_merge.webm" type="video/webm">
         <source src="static/videos/style_merge.mp4" type="video/mp4"></video>
       <p class="clip-caption"><b>Cyclists blocking the lane.</b> Both agents stop and wait to merge left. The aggressive
-        agent takes the first gap behind a passing car; the conservative agent merges about 16 s later, once the lane is open.</p>
+        agent takes the first gap behind a passing car, while the conservative agent merges about 16 s later, once the lane is open.</p>
     </div>
     <div class="clip">
       <video autoplay muted loop playsinline preload="metadata" poster="static/videos/style_turn.jpg">
@@ -193,11 +193,11 @@
     <div class="content">
       <ol>
         <li><b>A controlled driving-style dataset.</b> 15 drivers drove CARLA Leaderboard scenarios in a
-          driver-in-the-loop setup, each of their routes three times: once conservatively, once neutrally and once
+          driver-in-the-loop setup, each of their routes three times, once conservatively, once neutrally and once
           aggressively. Across these three drives, the driver and the route stay the same, and only the style the driver
           was asked to follow changes (29,777 frames, 55 routes, 21 scenario types).</li>
         <li><b>A retrieval-based architecture for driving style.</b> The style comes from retrieved human
-          demonstrations. The retrieval head is trained on triplets built from the human data: a positive has a similar
+          demonstrations. The retrieval head is trained on triplets built from the human data. A positive has a similar
           scene driven the same way, a hard negative has a similar scene driven differently (another speed or command),
           and an easy negative differs in both scene and action. The VLA backbone then conditions its waypoints on the
           retrieved demonstrations, so switching style only means searching a different FAISS index.</li>
@@ -218,7 +218,7 @@
     <figure class="figure">
       <img src="static/images/datacollection.png" alt="Style-instructed data collection overview">
       <figcaption>Participants drive CARLA Leaderboard scenarios three times, once under each instruction. Each pass
-        records the front-view RGB image, ego state (speed, throttle, steering, command), GPS targets and waypoints; VQA
+        records the front-view RGB image, ego state (speed, throttle, steering, command), GPS targets and waypoints, and VQA
         and commentary annotations are added afterwards.</figcaption>
     </figure>
 
@@ -283,14 +283,14 @@
         <h4 class="title is-5"><span class="stage">1</span> Triplet mining</h4>
         <p>Each frame is written out as a frame sentence (speed, steering, command, VQA annotation, commentary, GPS target
           and the executed waypoints). A combined score of SigLIP image similarity and BGE-M3 sentence similarity selects
-          positives, easy negatives and hard negatives: frames that look alike but where the driver used a different
+          positives, easy negatives and hard negatives, which are frames that look alike but where the driver used a different
           command or speed.</p>
       </div>
       <div class="column">
         <h4 class="title is-5"><span class="stage">2</span> Retrieval head</h4>
         <p>Frozen SigLIP features (768-d) are concatenated with a trained ControlEncoder over speed, throttle, steering,
           brake and command (128-d) and projected to a 1024-d embedding. A weighted triplet loss trains it, with extra weight on
-          hard negatives. One head serves all styles; only the queried index changes.</p>
+          hard negatives. One head serves all styles, and only the queried index changes.</p>
       </div>
       <div class="column">
         <h4 class="title is-5"><span class="stage">3</span> In-context SFT</h4>
@@ -321,12 +321,12 @@
     <figure class="figure">
       <img src="static/images/retrieval_no_style.jpg" alt="Retrieval without a style">
       <figcaption><b>No style.</b> The query goes to the style-agnostic index, a 5% route-level subset of SimLingo's
-        PDM-Lite data. Both context points come from the rule-based PDM-Lite expert, not from people.</figcaption>
+        PDM-lite data. Both context points come from the rule-based PDM-lite expert, not from people.</figcaption>
     </figure>
     <figure class="figure">
       <img src="static/images/retrieval_styles.jpg" alt="Retrieval from the conservative and aggressive databases">
       <figcaption><b>Conservative vs. aggressive.</b> The same Bench2Drive frame retrieves different human drivers. Both
-        conservative drivers are still stopped at the junction; one aggressive driver is already moving at 3.0 m/s.
+        conservative drivers are still stopped at the junction, while one aggressive driver is already moving at 3.0 m/s.
         Labels give the participant, scenario and town of each retrieved frame.</figcaption>
     </figure>
   </div>
@@ -337,13 +337,13 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Closed-Loop Driving on Bench2Drive</h2>
     <p class="section-lead has-text-centered">These runs use no style, so the context points come from the
-      style-agnostic PDM-Lite index. The black panel shows the model's prompt: the two retrieved context points
-      (blue), the current scene, and the commentary PersonaDrive generates (gold).</p>
+      style-agnostic PDM-lite index. The black panel shows the model's prompt, with the two retrieved context points
+      (blue), the current scene and the commentary PersonaDrive generates (gold).</p>
     <div class="clip">
       <video autoplay muted loop playsinline preload="metadata" poster="static/videos/drive_context_rain.jpg">
         <source src="static/videos/drive_context_rain.webm" type="video/webm">
         <source src="static/videos/drive_context_rain.mp4" type="video/mp4"></video>
-      <p class="clip-caption"><b>Heavy rain.</b> A parked car pulls out; PersonaDrive stops and lets it in. The retrieved
+      <p class="clip-caption"><b>Heavy rain.</b> A parked car pulls out, and PersonaDrive stops and lets it in. The retrieved
         context points on the right update as the car drives.</p>
     </div>
     <div class="columns">
@@ -445,7 +445,7 @@
         </tbody>
       </table>
       <p class="table-note">Baselines follow the comparison protocol of Drive My Way (DMW). PersonaDrive's speed rises
-        19.8% and its acceleration 24.9% from conservative to aggressive, in order; SimLingo prompted with the style name
+        19.8% and its acceleration 24.9% from conservative to aggressive, in order, while SimLingo prompted with the style name
         changes speed by 6.2% and its acceleration is not ordered.</p>
     </div>
 
@@ -487,7 +487,7 @@
       <p class="table-note">Self-reported scores from the
         <a href="https://github.com/autonomousvision/Bench2Drive-Leaderboard">Bench2Drive Leaderboard</a> (updated
         24 Sep 2026), LLM/VLA entries at or above SimLingo. The conservative-style row is our result from the paper
-        (Table 3); the no-style row is the listed entry. PersonaDrive is the only method in this list that can change its
+        (Table 3), and the no-style row is the listed entry. PersonaDrive is the only method in this list that can change its
         driving style at inference.</p>
     </div>
   </div>
